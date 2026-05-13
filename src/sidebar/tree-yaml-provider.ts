@@ -42,15 +42,15 @@ export class TreeFeatureNode extends vscode.TreeItem {
 
   private buildIcon(f: EnrichedFeature): vscode.ThemeIcon {
     if (f.completed_at !== null) {
-      return new vscode.ThemeIcon('check', new vscode.ThemeColor('charts.green'));
+      return new vscode.ThemeIcon('circle-filled', new vscode.ThemeColor('charts.green'));
     }
     switch (f.state) {
       case 'pending-sync':
         return new vscode.ThemeIcon('sync', new vscode.ThemeColor('charts.yellow'));
       case 'in-progress':
-        return new vscode.ThemeIcon('check', new vscode.ThemeColor('charts.orange'));
+        return new vscode.ThemeIcon('circle-filled', new vscode.ThemeColor('charts.orange'));
       default:
-        return new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('descriptionForeground'));
+        return new vscode.ThemeIcon('circle-filled', new vscode.ThemeColor('descriptionForeground'));
     }
   }
 

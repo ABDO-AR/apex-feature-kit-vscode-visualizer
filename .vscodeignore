@@ -3,3 +3,4 @@ tsconfig.json
 .gitignore
 **/*.map
 plan.md
+!resources/logo.svg

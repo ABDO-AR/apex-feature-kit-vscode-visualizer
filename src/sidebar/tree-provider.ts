@@ -26,13 +26,13 @@ export class FeatureNode extends vscode.TreeItem {
   private buildIcon(f: EnrichedFeature): vscode.ThemeIcon {
     switch (f.state) {
       case 'completed':
-        return new vscode.ThemeIcon('pass-filled', new vscode.ThemeColor('charts.yellow'));
+        return new vscode.ThemeIcon('circle-filled', new vscode.ThemeColor('charts.green'));
       case 'pending-sync':
         return new vscode.ThemeIcon('sync', new vscode.ThemeColor('charts.yellow'));
       case 'in-progress':
-        return new vscode.ThemeIcon('check', new vscode.ThemeColor('charts.orange'));
+        return new vscode.ThemeIcon('circle-filled', new vscode.ThemeColor('charts.orange'));
       case 'not-started':
-        return new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('descriptionForeground'));
+        return new vscode.ThemeIcon('circle-filled', new vscode.ThemeColor('descriptionForeground'));
     }
   }
 

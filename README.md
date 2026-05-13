@@ -1,19 +1,24 @@
-# Apex Feature Kit — VS Code Visualizer
-
-> by [Abdo AR](https://abdoar.com)
-
-Feature-Driven Development visualizer for VS Code — sidebar tree + Mermaid flow diagram for your `.features/` workspace.
+<div align="center">
+  <img src="resources/logo.svg" width="128" height="128" alt="Apex Feature Kit Logo" />
+  <h1>Apex Feature Kit</h1>
+  <p>Feature-Driven Development visualizer for VS Code</p>
+  <p>
+    <a href="https://github.com/ABDO-AR/apex-feature-kit-vscode-visualizer"><img src="https://img.shields.io/badge/GitHub-Repository-blue" alt="GitHub" /></a>
+    <img src="https://img.shields.io/badge/VS_Code-1.85%2B-blue" alt="VS Code" />
+    <img src="https://img.shields.io/badge/License-MIT-green" alt="License" />
+  </p>
+</div>
 
 ---
 
-## Overview
+> by [Abdo AR](https://abdoar.com)
 
-This VS Code extension reads your project's `.features/` directory (created by [`@abdoar/apex-feature-kit`](https://www.npmjs.com/package/@abdoar/apex-feature-kit)) and provides two live, synced views of your feature pipeline:
+This VS Code extension reads your project's `.features/` directory (created by [`@abdoar/apex-feature-kit`](https://www.npmjs.com/package/@abdoar/apex-feature-kit)) and provides live, synced views of your feature pipeline:
 
-- **Sidebar Tree** — Features with nested phase groups and task checklists. See exactly which tasks are done, in-progress, or not started — without opening the spec file.
-- **Flow Diagram** — A Mermaid.js chronological flowchart in an editor tab, plus a feature dashboard with progress bars and task breakdowns.
+- **Sidebar Views** — Features, Tree, and Instructions panels in a dedicated Activity Bar section with state icons, expand/collapse, and inline actions
+- **Flow Diagram** — Interactive split-view with flow nodes, detail panel, accordion task lists, and PNG export
 
-Both views update in real-time when specs or `tree.yaml` change (via the AI agent or CLI). Zero hardcoded colors — everything adapts to your VS Code theme.
+Both views update in real-time when specs or `tree.yaml` change (via the AI agent or CLI). Everything adapts to your VS Code theme.
 
 ---
 
@@ -21,7 +26,7 @@ Both views update in real-time when specs or `tree.yaml` change (via the AI agen
 
 1. Install the extension from the VS Code Marketplace (or the `.vsix` file)
 2. Open a project that has a `.features/` directory
-3. The extension auto-activates — the sidebar and flow diagram open automatically
+3. The extension auto-activates — click the Apex icon in the Activity Bar
 
 No `.features/` yet? Install the CLI first:
 
@@ -32,33 +37,49 @@ apex-feature-kit init all
 
 ---
 
-## Features
+## Sidebar Views
 
-### Sidebar — Apex Features
+The extension adds a dedicated **Apex Feature Kit** icon to the Activity Bar with three panels:
 
-A native TreeView in the Explorer sidebar showing:
+### Features
 
-- **Features** with state icons: completed (gold), in-progress (blue), pending-sync (gold), not-started (gray)
+A native TreeView showing:
+
+- **Features** with state-colored filled circles: completed (green), in-progress (orange), not-started (gray), sync-needed (yellow)
 - **Phases** under each feature (collapsed groups from `### Phase` headers in specs)
 - **Tasks** with check/unchecked icons matching `- [x]` / `- [ ]` in specs
 - **Definition of Done** section with its own checklist
-- Right-click to open a spec file or run `apex-feature-kit sync`
+- Inline actions: open spec, expand/collapse, run sync
+- Toolbar: refresh, flow diagram, instructions, toggle expand/collapse
 
-### Flow Diagram — Apex Project Flow
+### Tree
 
-A WebviewPanel editor tab showing:
+A flat view of `tree.yaml` entries:
 
-- **Mermaid.js flowchart** — Features sorted by `created_at`, connected with chronological arrows
-- **Feature dashboard** — Cards with progress bars, task lists grouped by phase, and state badges
-- Click any card to jump to its spec file
+- `tree.yaml` file node (click to open)
+- Each feature as a checklist item with state icon and task counts
+- Inline actions: open spec, run sync
+- Toolbar: refresh, open tree.yaml, toggle expand/collapse
 
 ### Instructions
 
-Click the book icon in the sidebar title bar, or run `Apex: Show Instructions` from the command palette. Opens `.features/instructions.md` in VS Code's native markdown preview.
+Hierarchical view of `.features/instructions.md`:
 
-### Live Updates
+- `instructions.md` file node (click to open)
+- Sections parsed from headings (h1 → h2 → h3 hierarchy)
+- Click any section to jump to that line in the file
+- Toolbar: open instructions, toggle expand/collapse
 
-A `FileSystemWatcher` monitors `.features/**` — when the AI agent marks tasks `[x]` or the CLI runs `sync`, both the sidebar and flow diagram update instantly (with 300ms debounce to batch rapid changes).
+---
+
+## Flow Diagram
+
+An interactive WebviewPanel with:
+
+- **Toolbar** — Refresh, Expand/Collapse, Export PNG
+- **Flow Panel** (left) — Clickable nodes with state-colored progress bars; single-click selects, double-click opens spec
+- **Detail Panel** (right) — Selected feature's stats, progress bar, overview, accordion phases with task checkboxes, and DoD section
+- **PNG Export** — Renders the diagram to canvas and saves via save dialog
 
 ---
 
@@ -66,26 +87,27 @@ A `FileSystemWatcher` monitors `.features/**` — when the AI agent marks tasks 
 
 | Command | Description |
 |---|---|
-| `Apex: Open Flow Diagram` | Open or reveal the Mermaid flow tab |
-| `Apex: Refresh Feature Tree` | Manually refresh the sidebar |
-| `Apex: Open Feature Spec` | Open a spec file (prompts if multiple features) |
+| `Apex: Open Flow Diagram` | Open or reveal the interactive flow tab |
+| `Apex: Refresh Feature Tree` | Manually refresh all sidebar views |
+| `Apex: Open Feature Spec` | Open a spec file directly |
 | `Apex: Run Sync` | Run `apex-feature-kit sync` in a terminal |
 | `Apex: Show Instructions` | Open the AI protocol in markdown preview |
-
-Sidebar title bar buttons: refresh, flow diagram, instructions.
+| `Apex: Open tree.yaml` | Open the tree.yaml file |
+| `Apex: Toggle Expand Features` | Expand/collapse all features in sidebar |
+| `Apex: Toggle Expand Tree` | Expand/collapse tree view |
+| `Apex: Toggle Expand Instructions` | Expand/collapse instructions view |
+| `Apex: Toggle Expand Feature` | Expand/collapse a single feature's tasks |
 
 ---
 
 ## Feature States
 
-The extension derives four states from `tree.yaml` and spec task checkboxes:
-
 | State | Icon | Condition |
 |---|---|---|
-| **Completed** | Gold `pass-filled` | `completed_at` is set (sync ran after all tasks done) |
-| **Sync Needed** | Gold `sync` | All tasks checked but `completed_at` is null — run `apex-feature-kit sync` |
-| **In Progress** | Blue `loading~spin` | Some tasks checked, some not |
-| **Not Started** | Gray `circle-outline` | No tasks checked yet |
+| **Completed** | Green filled circle | `completed_at` is set |
+| **In Progress** | Orange filled circle | Some tasks checked, some not |
+| **Sync Needed** | Yellow sync icon | All tasks checked but `completed_at` is null |
+| **Not Started** | Gray filled circle | No tasks checked yet |
 
 ---
 
@@ -93,11 +115,10 @@ The extension derives four states from `tree.yaml` and spec task checkboxes:
 
 All visual elements use VS Code's native theming:
 
-- Sidebar icons use `vscode.ThemeIcon` (codicons) with `vscode.ThemeColor` keys
+- Sidebar icons use `vscode.ThemeIcon` with `vscode.ThemeColor` keys
 - Webview colors use `var(--vscode-*)` CSS variables
-- Mermaid diagram colors are read at runtime via `getComputedStyle`
-
-Works in Light+, Dark+, High Contrast, and any third-party theme. No hardcoded colors.
+- Inline SVG icons (no external font dependencies)
+- Works in Light+, Dark+, High Contrast, and any third-party theme
 
 ---
 
@@ -109,7 +130,7 @@ npm run compile       # Compile TypeScript to out/
 npm run watch         # Auto-compile on file changes
 ```
 
-Test in VS Code: press **F5** to launch the Extension Development Host. See [docs/guide.md](docs/guide.md) for full instructions.
+Test in VS Code: press **F5** to launch the Extension Development Host.
 
 ---
 

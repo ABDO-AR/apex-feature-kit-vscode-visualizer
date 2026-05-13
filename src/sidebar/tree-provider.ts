@@ -30,7 +30,7 @@ export class FeatureNode extends vscode.TreeItem {
       case 'pending-sync':
         return new vscode.ThemeIcon('sync', new vscode.ThemeColor('charts.yellow'));
       case 'in-progress':
-        return new vscode.ThemeIcon('loading~spin', new vscode.ThemeColor('charts.blue'));
+        return new vscode.ThemeIcon('check', new vscode.ThemeColor('charts.orange'));
       case 'not-started':
         return new vscode.ThemeIcon('circle-outline', new vscode.ThemeColor('descriptionForeground'));
     }
@@ -102,7 +102,7 @@ export class DodHeaderNode extends vscode.TreeItem {
     super('Definition of Done', vscode.TreeItemCollapsibleState.Collapsed);
     this.featureId = featureId;
     this.description = `${completed}/${total}`;
-    this.iconPath = new vscode.ThemeIcon('shield-check');
+    this.iconPath = new vscode.ThemeIcon('folder');
     this.contextValue = 'dod-header';
   }
 }
@@ -122,14 +122,20 @@ export class ApexTreeProvider implements vscode.TreeDataProvider<ApexTreeNode> {
   readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
   private features: EnrichedFeature[] = [];
+  private parentMap = new Map<ApexTreeNode, ApexTreeNode>();
 
   refresh(features?: EnrichedFeature[]): void {
     if (features) this.features = features;
+    this.parentMap.clear();
     this._onDidChangeTreeData.fire(undefined);
   }
 
   getTreeItem(element: ApexTreeNode): vscode.TreeItem {
     return element;
+  }
+
+  getParent(element: ApexTreeNode): vscode.ProviderResult<ApexTreeNode> {
+    return this.parentMap.get(element);
   }
 
   getChildren(element?: ApexTreeNode): vscode.ProviderResult<ApexTreeNode[]> {
@@ -166,20 +172,24 @@ export class ApexTreeProvider implements vscode.TreeDataProvider<ApexTreeNode> {
     }
 
     for (const [phaseName, tasks] of phases) {
-      children.push(new PhaseNode(
+      const phaseNode = new PhaseNode(
         phaseName,
         tasks.length,
         tasks.filter(t => t.checked).length,
         feature.id
-      ));
+      );
+      this.parentMap.set(phaseNode, node);
+      children.push(phaseNode);
     }
 
     if (feature.spec.definitionOfDone.items.length > 0) {
-      children.push(new DodHeaderNode(
+      const dodNode = new DodHeaderNode(
         feature.dodCounts.total,
         feature.dodCounts.completed,
         feature.id
-      ));
+      );
+      this.parentMap.set(dodNode, node);
+      children.push(dodNode);
     }
 
     return children;
@@ -190,13 +200,26 @@ export class ApexTreeProvider implements vscode.TreeDataProvider<ApexTreeNode> {
     if (!feature) return [];
     return feature.spec.tasks
       .filter(t => t.phase === node.label)
-      .map(t => new TaskNode(t));
+      .map(t => {
+        const taskNode = new TaskNode(t);
+        this.parentMap.set(taskNode, node);
+        return taskNode;
+      });
   }
 
   private getDodChildren(node: DodHeaderNode): ApexTreeNode[] {
     const feature = this.findFeature(node.featureId);
     if (!feature) return [];
-    return feature.spec.definitionOfDone.items.map(t => new DodNode(t));
+    return feature.spec.definitionOfDone.items.map(t => {
+      const dodNode = new DodNode(t);
+      this.parentMap.set(dodNode, node);
+      return dodNode;
+    });
+  }
+
+  findFeatureNode(id: string): FeatureNode | undefined {
+    const feature = this.findFeature(id);
+    return feature ? new FeatureNode(feature) : undefined;
   }
 
   private findFeature(id: string): EnrichedFeature | undefined {

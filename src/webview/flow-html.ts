@@ -45,7 +45,7 @@ function generateNodeStyleData(features: EnrichedFeature[]): NodeStyle[] {
 function buildNodeLabel(feat: EnrichedFeature): string {
   const icon = feat.state === 'completed' ? '✓'
     : feat.state === 'pending-sync' ? '⏳'
-    : feat.state === 'in-progress' ? '◉'
+    : feat.state === 'in-progress' ? '⬥'
     : '○';
   const progress = feat.taskCounts.total > 0
     ? ` ${feat.taskCounts.completed}/${feat.taskCounts.total}`
@@ -155,7 +155,7 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
       border-color: var(--vscode-focusBorder);
     }
     .feature-card.completed { border-left: 3px solid var(--vscode-testing-iconPassed); }
-    .feature-card.in-progress { border-left: 3px solid var(--vscode-charts-blue); }
+    .feature-card.in-progress { border-left: 3px solid var(--vscode-charts-orange); }
     .feature-card.pending-sync { border-left: 3px solid var(--vscode-charts-yellow); }
     .feature-card.not-started { border-left: 3px solid var(--vscode-descriptionForeground); }
     .feature-card h3 {
@@ -177,7 +177,7 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
       transition: width 0.3s;
     }
     .completed .progress-bar-fill { background: var(--vscode-testing-iconPassed); }
-    .in-progress .progress-bar-fill { background: var(--vscode-charts-blue); }
+    .in-progress .progress-bar-fill { background: var(--vscode-charts-orange); }
     .pending-sync .progress-bar-fill { background: var(--vscode-charts-yellow); }
     .task-list {
       list-style: none;
@@ -215,7 +215,7 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
       font-family: var(--apex-ui-font);
     }
     .state-badge.completed { background: var(--vscode-testing-iconPassed); color: var(--vscode-editor-background); }
-    .state-badge.in-progress { background: var(--vscode-charts-blue); color: #fff; }
+    .state-badge.in-progress { background: var(--vscode-charts-orange); color: #fff; }
     .state-badge.pending-sync { background: var(--vscode-charts-yellow); color: var(--vscode-editor-background); }
     .state-badge.not-started { background: var(--vscode-descriptionForeground); color: var(--vscode-editor-background); }
     .empty-state {
@@ -245,7 +245,7 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
       nodeText: cs.getPropertyValue('--vscode-editor-foreground').trim() || (isDark ? '#cccccc' : '#333333'),
       completedFill: cs.getPropertyValue('--vscode-testing-iconPassed').trim() || '#73c991',
       completedStroke: cs.getPropertyValue('--vscode-charts-yellow').trim() || '#cca700',
-      inProgressStroke: cs.getPropertyValue('--vscode-charts-blue').trim() || '#3794ff',
+      inProgressStroke: cs.getPropertyValue('--vscode-charts-orange').trim() || '#d18616',
       lineColor: cs.getPropertyValue('--vscode-charts-foreground').trim() || (isDark ? '#cccccc' : '#666666'),
       fontFamily: cs.getPropertyValue('--vscode-fontFamily').trim() || 'Consolas, Courier New, monospace',
       fontSize: cs.getPropertyValue('--vscode-fontSize').trim() || '13px',

@@ -33,6 +33,11 @@
           "icon": "resources/icon.svg"
         },
         {
+          "id": "apexTreeYaml",
+          "name": "Tree",
+          "icon": "resources/icon.svg"
+        },
+        {
           "id": "apexInstructions",
           "name": "Instructions",
           "icon": "resources/icon.svg"
@@ -42,6 +47,11 @@
     "viewsWelcome": [
       {
         "view": "apexFeatureTree",
+        "contents": "No `.features/` directory found.\nRun `apex-feature-kit init all` to get started.\n[Show Instructions](command:apex.showInstructions)",
+        "when": "!apex.hasFeatures"
+      },
+      {
+        "view": "apexTreeYaml",
         "contents": "No `.features/` directory found.\nRun `apex-feature-kit init all` to get started.\n[Show Instructions](command:apex.showInstructions)",
         "when": "!apex.hasFeatures"
       },
@@ -56,18 +66,31 @@
       { "command": "apex.refreshTree", "title": "Apex: Refresh Feature Tree", "icon": "$(refresh)" },
       { "command": "apex.openSpec", "title": "Apex: Open Feature Spec", "icon": "$(go-to-file)" },
       { "command": "apex.runSync", "title": "Apex: Run Sync", "icon": "$(sync)" },
-      { "command": "apex.showInstructions", "title": "Apex: Show Instructions", "icon": "$(book)" }
+      { "command": "apex.showInstructions", "title": "Apex: Show Instructions", "icon": "$(book)" },
+      { "command": "apex.openTreeYaml", "title": "Apex: Open tree.yaml", "icon": "$(go-to-file)" },
+      { "command": "apex.toggleExpandFeatures", "title": "Apex: Toggle Expand Features", "icon": "$(expand-all)" },
+      { "command": "apex.toggleExpandTree", "title": "Apex: Toggle Expand Tree", "icon": "$(expand-all)" },
+      { "command": "apex.toggleExpandInstructions", "title": "Apex: Toggle Expand Instructions", "icon": "$(expand-all)" },
+      { "command": "apex.toggleExpandFeature", "title": "Apex: Toggle Expand Feature", "icon": "$(expand-all)" }
     ],
     "menus": {
       "view/title": [
         { "command": "apex.refreshTree", "when": "view == apexFeatureTree", "group": "navigation@1" },
         { "command": "apex.openFlow", "when": "view == apexFeatureTree", "group": "navigation@2" },
         { "command": "apex.showInstructions", "when": "view == apexFeatureTree", "group": "navigation@3" },
-        { "command": "apex.showInstructions", "when": "view == apexInstructions", "group": "navigation@1" }
+        { "command": "apex.toggleExpandFeatures", "when": "view == apexFeatureTree", "group": "navigation@4" },
+        { "command": "apex.refreshTree", "when": "view == apexTreeYaml", "group": "navigation@1" },
+        { "command": "apex.openTreeYaml", "when": "view == apexTreeYaml", "group": "navigation@2" },
+        { "command": "apex.toggleExpandTree", "when": "view == apexTreeYaml", "group": "navigation@3" },
+        { "command": "apex.showInstructions", "when": "view == apexInstructions", "group": "navigation@1" },
+        { "command": "apex.toggleExpandInstructions", "when": "view == apexInstructions", "group": "navigation@2" }
       ],
       "view/item/context": [
         { "command": "apex.openSpec", "when": "view == apexFeatureTree && viewItem =~ /^feature/", "group": "inline@1" },
-        { "command": "apex.runSync", "when": "view == apexFeatureTree && viewItem =~ /^feature/", "group": "inline@2" }
+        { "command": "apex.toggleExpandFeature", "when": "view == apexFeatureTree && viewItem =~ /^feature/", "group": "inline@2" },
+        { "command": "apex.runSync", "when": "view == apexFeatureTree && viewItem =~ /^feature/", "group": "inline@3" },
+        { "command": "apex.openSpec", "when": "view == apexTreeYaml && viewItem =~ /^tree-feature/", "group": "inline@1" },
+        { "command": "apex.runSync", "when": "view == apexTreeYaml && viewItem =~ /^tree-feature/", "group": "inline@2" }
       ]
     }
   },

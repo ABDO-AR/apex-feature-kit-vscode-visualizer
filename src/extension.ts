@@ -4,10 +4,13 @@ import * as fs from 'fs';
 import { FeatureReader } from './data/feature-reader.js';
 import { startWatching } from './data/watcher.js';
 import { ApexTreeProvider } from './sidebar/tree-provider.js';
+import { InstructionsTreeProvider } from './sidebar/instructions-tree.js';
 import { ApexFlowPanel } from './webview/flow-panel.js';
 import { showInstructions } from './instructions/instructions-panel.js';
 import { VIEW_ID, CMD, CONTEXT_KEY } from './shared/constants.js';
 import type { EnrichedFeature } from './shared/types.js';
+
+const INSTRUCTIONS_VIEW_ID = 'apexInstructions';
 
 export function activate(context: vscode.ExtensionContext): void {
   const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
@@ -15,8 +18,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
   const reader = new FeatureReader(workspaceRoot);
   const treeProvider = new ApexTreeProvider();
+  const instructionsProvider = new InstructionsTreeProvider(workspaceRoot);
 
   const treeView = vscode.window.registerTreeDataProvider(VIEW_ID, treeProvider);
+  const instructionsView = vscode.window.registerTreeDataProvider(INSTRUCTIONS_VIEW_ID, instructionsProvider);
 
   const openFlow = vscode.commands.registerCommand(CMD.openFlow, async () => {
     const features = await reader.readTree();
@@ -73,6 +78,7 @@ export function activate(context: vscode.ExtensionContext): void {
   const watcher = startWatching(workspaceRoot, async () => {
     const features = await reader.readTree();
     treeProvider.refresh(features);
+    instructionsProvider.refresh();
     if (ApexFlowPanel.currentPanel) {
       ApexFlowPanel.currentPanel.update(features);
     }
@@ -87,6 +93,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     treeView,
+    instructionsView,
     openFlow,
     refreshTree,
     openSpec,

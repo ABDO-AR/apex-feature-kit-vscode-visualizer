@@ -113,10 +113,16 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src https://cdn.jsdelivr.net;">
   <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
   <style>
+    :root {
+      --apex-ui-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --apex-code-font: var(--vscode-fontFamily, 'Consolas, Courier New, monospace');
+    }
     body {
       background: var(--vscode-editor-background);
       color: var(--vscode-editor-foreground);
-      font-family: var(--vscode-fontFamily);
+      font-family: var(--apex-ui-font);
+      font-size: 13px;
+      font-weight: normal;
       padding: 20px;
       margin: 0;
     }
@@ -124,6 +130,7 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
       color: var(--vscode-editor-foreground);
       border-bottom: 1px solid var(--vscode-widget-border);
       padding-bottom: 8px;
+      font-weight: 600;
     }
     #flow-container {
       display: flex;
@@ -154,7 +161,8 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
     .feature-card h3 {
       margin: 0 0 8px;
       color: var(--vscode-editor-foreground);
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 600;
     }
     .progress-bar {
       background: var(--vscode-widget-border);
@@ -176,6 +184,7 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
       padding: 0;
       margin: 8px 0 0;
       font-size: 12px;
+      font-family: var(--apex-code-font);
     }
     .task-list li {
       padding: 2px 0;
@@ -191,15 +200,19 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
     .phase-label {
       color: var(--vscode-descriptionForeground);
       font-size: 11px;
+      font-weight: 600;
       margin: 8px 0 2px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      font-family: var(--apex-ui-font);
     }
     .state-badge {
       font-size: 11px;
+      font-weight: 600;
       padding: 2px 8px;
       border-radius: 3px;
       display: inline-block;
+      font-family: var(--apex-ui-font);
     }
     .state-badge.completed { background: var(--vscode-testing-iconPassed); color: var(--vscode-editor-background); }
     .state-badge.in-progress { background: var(--vscode-charts-blue); color: #fff; }
@@ -234,7 +247,8 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
       completedStroke: cs.getPropertyValue('--vscode-charts-yellow').trim() || '#cca700',
       inProgressStroke: cs.getPropertyValue('--vscode-charts-blue').trim() || '#3794ff',
       lineColor: cs.getPropertyValue('--vscode-charts-foreground').trim() || (isDark ? '#cccccc' : '#666666'),
-      fontFamily: cs.getPropertyValue('--vscode-fontFamily').trim() || 'sans-serif',
+      fontFamily: cs.getPropertyValue('--vscode-fontFamily').trim() || 'Consolas, Courier New, monospace',
+      fontSize: cs.getPropertyValue('--vscode-fontSize').trim() || '13px',
     };
 
     mermaid.initialize({
@@ -246,6 +260,7 @@ function wrapInDocument(mermaidGraph: string, featureCards: string, nodeStyleDat
         primaryBorderColor: themeColors.inProgressStroke,
         lineColor: themeColors.lineColor,
         fontFamily: themeColors.fontFamily,
+        fontSize: themeColors.fontSize,
       }
     });
 

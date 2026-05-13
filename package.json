@@ -16,11 +16,25 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "apex-feature-kit",
+          "title": "Apex Feature Kit",
+          "icon": "resources/apex-activitybar.svg"
+        }
+      ]
+    },
     "views": {
-      "explorer": [
+      "apex-feature-kit": [
         {
           "id": "apexFeatureTree",
-          "name": "Apex Features",
+          "name": "Features",
+          "icon": "resources/icon.svg"
+        },
+        {
+          "id": "apexInstructions",
+          "name": "Instructions",
           "icon": "resources/icon.svg"
         }
       ]
@@ -30,20 +44,26 @@
         "view": "apexFeatureTree",
         "contents": "No `.features/` directory found.\nRun `apex-feature-kit init all` to get started.\n[Show Instructions](command:apex.showInstructions)",
         "when": "!apex.hasFeatures"
+      },
+      {
+        "view": "apexInstructions",
+        "contents": "No `.features/instructions.md` found.\nRun `apex-feature-kit init all` to get started.\n[Show Instructions](command:apex.showInstructions)",
+        "when": "!apex.hasFeatures"
       }
     ],
     "commands": [
-      { "command": "apex.openFlow", "title": "Apex: Open Flow Diagram" },
-      { "command": "apex.refreshTree", "title": "Apex: Refresh Feature Tree" },
-      { "command": "apex.openSpec", "title": "Apex: Open Feature Spec" },
-      { "command": "apex.runSync", "title": "Apex: Run Sync" },
-      { "command": "apex.showInstructions", "title": "Apex: Show Instructions" }
+      { "command": "apex.openFlow", "title": "Apex: Open Flow Diagram", "icon": "$(graph)" },
+      { "command": "apex.refreshTree", "title": "Apex: Refresh Feature Tree", "icon": "$(refresh)" },
+      { "command": "apex.openSpec", "title": "Apex: Open Feature Spec", "icon": "$(go-to-file)" },
+      { "command": "apex.runSync", "title": "Apex: Run Sync", "icon": "$(sync)" },
+      { "command": "apex.showInstructions", "title": "Apex: Show Instructions", "icon": "$(book)" }
     ],
     "menus": {
       "view/title": [
         { "command": "apex.refreshTree", "when": "view == apexFeatureTree", "group": "navigation@1" },
         { "command": "apex.openFlow", "when": "view == apexFeatureTree", "group": "navigation@2" },
-        { "command": "apex.showInstructions", "when": "view == apexFeatureTree", "group": "navigation@3" }
+        { "command": "apex.showInstructions", "when": "view == apexFeatureTree", "group": "navigation@3" },
+        { "command": "apex.showInstructions", "when": "view == apexInstructions", "group": "navigation@1" }
       ],
       "view/item/context": [
         { "command": "apex.openSpec", "when": "view == apexFeatureTree && viewItem =~ /^feature/", "group": "inline@1" },

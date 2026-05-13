@@ -4,6 +4,10 @@
   "description": "Feature-Driven Development visualizer — sidebar tree + Mermaid flow diagram",
   "version": "0.1.0",
   "publisher": "abdoar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ABDO-AR/apex-feature-kit-vscode-visualizer"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },

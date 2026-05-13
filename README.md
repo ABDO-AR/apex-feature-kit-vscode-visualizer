@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="resources/logo.svg" width="128" height="128" alt="Apex Feature Kit Logo" />
+  <img src="resources/logo.png" width="128" height="128" alt="Apex Feature Kit Logo" />
   <h1>Apex Feature Kit</h1>
   <p>Feature-Driven Development visualizer for VS Code</p>
   <p>
@@ -117,7 +117,7 @@ All visual elements use VS Code's native theming:
 
 - Sidebar icons use `vscode.ThemeIcon` with `vscode.ThemeColor` keys
 - Webview colors use `var(--vscode-*)` CSS variables
-- Inline SVG icons (no external font dependencies)
+- Inline png icons (no external font dependencies)
 - Works in Light+, Dark+, High Contrast, and any third-party theme
 
 ---
